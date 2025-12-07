@@ -9,7 +9,9 @@ import {
   FaTwitter,
   FaUser,
   FaEnvelope,
-  FaLock
+  FaLock,
+  FaCheckCircle,
+  FaExclamationCircle
 } from "react-icons/fa";
 
 function LoginPage() {
@@ -19,13 +21,14 @@ function LoginPage() {
   const [errors, setErrors] = useState({});
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-
+  const [loginStatus, setLoginStatus] = useState({ type: '', message: '' });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+    // Clear login status when user starts typing
+    if (loginStatus.type) setLoginStatus({ type: '', message: '' });
   };
 
   const validateForm = () => {
@@ -37,53 +40,122 @@ function LoginPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoginStatus({ type: '', message: '' });
 
-  if (!validateForm()) return;
-  setIsSubmitting(true);
+    if (!validateForm()) return;
+    setIsSubmitting(true);
 
-  try {
-    // --- 1) Try ADMIN Login ---
-    
-    const adminRes = await axios.post("/api/admins/login", formData);
+    try {
+      // --- 1) Try ADMIN Login ---
+      const adminRes = await axios.post("/api/admins/login", formData);
 
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem("authToken", adminRes.data.token);
-    storage.setItem("userRole", "admin");
-    storage.setItem("userId", adminRes.data.admin.id);
-    storage.setItem("userName", adminRes.data.admin.name);
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem("authToken", adminRes.data.token);
+      storage.setItem("userRole", "admin");
+      storage.setItem("userId", adminRes.data.admin.id);
+      storage.setItem("userName", adminRes.data.admin.name);
 
-    window.dispatchEvent(new Event("storage"));
-    navigate("/dashboard/admin");
-    return; // STOP here if admin login succeeded
+      window.dispatchEvent(new Event("storage"));
+      setLoginStatus({ 
+        type: 'success', 
+        message: 'Admin login successful! Redirecting...' 
+      });
+      
+      setTimeout(() => {
+        navigate("/dashboard/admin");
+      }, 1500);
+      return;
 
-  } catch (adminErr) {
-    console.log("Not an admin → trying user login...");
-  }
+    } catch (adminErr) {
+      console.log("Not an admin → trying user login...");
+    }
 
-  // --- 2) Try USER Login ---
-  try {
-    const userRes = await axios.post("/api/users/login", formData);
-    const user = userRes.data.user;
+    // --- 2) Try USER Login ---
+    try {
+      const userRes = await axios.post("/api/users/login", formData);
+      const user = userRes.data.user;
 
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem("authToken", userRes.data.token);
-    storage.setItem("userRole", user.role);
-    storage.setItem("userId", user.id);
-    storage.setItem("userName", user.username);
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem("authToken", userRes.data.token);
+      storage.setItem("userRole", user.role);
+      storage.setItem("userId", user.id);
+      storage.setItem("userName", user.username);
 
-    window.dispatchEvent(new Event("storage"));
-    navigate("/dashboard/customer");
-    return;
+      window.dispatchEvent(new Event("storage"));
+      setLoginStatus({ 
+        type: 'success', 
+        message: 'Login successful! Redirecting...' 
+      });
+      
+      setTimeout(() => {
+        navigate("/dashboard/customer");
+      }, 1500);
 
-  } catch (userErr) {
-    alert("Invalid email or password");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+    } catch (userErr) {
+      // Check specific error types
+      if (userErr.response) {
+        const { status, data } = userErr.response;
+        
+        if (status === 401) {
+          if (data.message && data.message.toLowerCase().includes('password')) {
+            setLoginStatus({ 
+              type: 'error', 
+              message: 'Incorrect password. Please try again.' 
+            });
+          } else if (data.message && data.message.toLowerCase().includes('email')) {
+            setLoginStatus({ 
+              type: 'error', 
+              message: 'Email not found. Please check your email or register.' 
+            });
+          } else {
+            setLoginStatus({ 
+              type: 'error', 
+              message: 'Invalid email or password. Please try again.' 
+            });
+          }
+        } else if (status === 404) {
+          setLoginStatus({ 
+            type: 'error', 
+            message: 'Account not found. Please check your email or register.' 
+          });
+        } else if (status === 400) {
+          setLoginStatus({ 
+            type: 'error', 
+            message: data.message || 'Invalid login credentials.' 
+          });
+        } else if (status === 403) {
+          setLoginStatus({ 
+            type: 'error', 
+            message: 'Account is deactivated. Please contact support.' 
+          });
+        } else if (status >= 500) {
+          setLoginStatus({ 
+            type: 'error', 
+            message: 'Server error. Please try again later.' 
+          });
+        } else {
+          setLoginStatus({ 
+            type: 'error', 
+            message: 'Login failed. Please try again.' 
+          });
+        }
+      } else if (userErr.request) {
+        setLoginStatus({ 
+          type: 'error', 
+          message: 'Network error. Please check your connection.' 
+        });
+      } else {
+        setLoginStatus({ 
+          type: 'error', 
+          message: 'An unexpected error occurred.' 
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div 
@@ -127,6 +199,21 @@ const handleSubmit = async (e) => {
                 <h3 className="fw-bold text-dark mb-1">Sign In</h3>
                 <p className="text-muted">Welcome back to Ceylon Travels</p>
               </div>
+
+              {/* Login Status Message */}
+              {loginStatus.type && (
+                <div 
+                  className={`alert alert-${loginStatus.type === 'success' ? 'success' : 'danger'} d-flex align-items-center mb-4`}
+                  role="alert"
+                >
+                  {loginStatus.type === 'success' ? (
+                    <FaCheckCircle className="me-2" />
+                  ) : (
+                    <FaExclamationCircle className="me-2" />
+                  )}
+                  <span className="small">{loginStatus.message}</span>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit}>
                 {/* Email */}
@@ -281,6 +368,17 @@ const handleSubmit = async (e) => {
         
         .border-end-0 {
           border-right: 0 !important;
+        }
+
+        .alert {
+          border-radius: 0.5rem;
+          padding: 0.75rem 1rem;
+          animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>
