@@ -506,11 +506,11 @@ function AllHotelsPage() {
                           View Details
                         </Link>
                         <Link
-                          to={`/booking/${hotel.id}`}
-                          className="btn btn-book-now flex-fill"
-                        >
-                          Book Now
-                        </Link>
+                            to={`/public/book-hotel/${hotel.id}`}
+                            className="btn btn-book-now flex-fill"
+                          >
+                            Book Now
+                          </Link>
                       </div>
                     </div>
                   </div>

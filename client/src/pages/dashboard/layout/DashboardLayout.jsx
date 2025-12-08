@@ -6,9 +6,6 @@ import {
 } from 'react-icons/fa';
 import {
   RiDashboardFill,
-  RiMapPin2Fill,
-  RiHeartFill,
-  RiCarFill,
   RiFileListFill,
   RiUser3Fill,
   RiChat3Fill,
@@ -63,12 +60,6 @@ function DashboardLayout({ role = 'admin' }) {
  { path: '/dashboard/customer', label: 'Dashboard', icon: <RiDashboardFill /> },
 
   { path: '/dashboard/customer/bookings', label: 'My Bookings', icon: <RiFileListFill /> },
-
-  { path: '/dashboard/customer/saved', label: 'Saved Destinations', icon: <RiHeartFill /> },
-
-  { path: '/destinations', label: 'Explore Destinations', icon: <RiMapPin2Fill /> },
-
-  { path: '/dashboard/customer/transports', label: 'Transport Bookings', icon: <RiCarFill /> },
 
   { path: '/dashboard/customer/payments', label: 'Payment History', icon: <RiWallet3Fill /> },
 
@@ -146,7 +137,10 @@ function DashboardLayout({ role = 'admin' }) {
             </li>
           ))}
         </ul>
-
+        <br />
+           <br />
+              <br />
+<hr />
         {!isSidebarCollapsed && (
           <div className="sidebar-footer mt-auto">
             <button className="btn btn-outline-light btn-sm w-100 mb-2" onClick={toggleDarkMode}>

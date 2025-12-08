@@ -16,6 +16,8 @@ require('./models/Hotel');
 require('./models/TourPackage');
 require('./models/Provider');
 require('./models/Transport');
+require('./models/HotelBooking');
+
 
 // Import routes
 const userRoutes = require('./routes/userRoutes');  
@@ -49,6 +51,8 @@ app.use("/api/tour-packages", tourPackageRoutes);
 app.use("/api/transports",require("./routes/transportRoutes"));
 app.use("/api/destinations", require("./routes/destinationRoutes"));
 app.use("/api/search", require("./routes/searchRoutes"));
+app.use("/api/hotel-booking", require("./routes/hotelBookingRoutes"));
+
 
 // Sync DB
 sequelize.sync({ alter: true })

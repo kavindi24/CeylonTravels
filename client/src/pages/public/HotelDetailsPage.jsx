@@ -230,7 +230,7 @@ function HotelDetailsPage() {
 
                     <div className="booking-actions">
                       <Link 
-                        to={`/booking/${hotel.id}`}
+                        to={`/public/book-hotel/${hotel.id}`}
                         className="btn btn-primary btn-lg w-100 mb-3"
                       >
                         Book Now

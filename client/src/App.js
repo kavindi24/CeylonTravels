@@ -67,6 +67,7 @@ import CustomerDashboard from './pages/dashboard/customer/CustomerDashboard';
 import MyBookings from './pages/dashboard/customer/MyBookings';
 import Messages from './pages/dashboard/customer/Messages';
 import ProfileSettings from './pages/dashboard/customer/ProfileSettings';
+import HotelBooking from './pages/dashboard/customer/HotelBooking';
 
 // Not Found Page
 function NotFoundPage() {
@@ -109,6 +110,8 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
 
           {/* Booking & Payment Routes */}
+          <Route path="/public/book-hotel/:id" element={<HotelBooking />} />
+
           <Route path="/booking/confirm" element={<BookingConfirmationPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
