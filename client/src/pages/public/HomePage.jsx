@@ -440,7 +440,7 @@ function HomePage() {
                             View Details
                           </Link>
                           <Link 
-                            to={`/booking/${hotel.id}`} 
+                            to={`/public/book-hotel/${hotel.id}`} 
                             className="btn btn-book-now flex-fill"
                           >
                             Book Now

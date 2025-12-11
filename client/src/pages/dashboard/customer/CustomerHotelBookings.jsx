@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  FaArrowLeft,
   FaCreditCard,
   FaHotel,
   FaCalendarAlt,
@@ -15,8 +14,7 @@ import {
   FaDownload,
   FaFilter,
   FaSearch,
-  FaTrash,
-  FaEdit
+  FaTrash
 } from "react-icons/fa";
 
 function CustomerHotelBookings() {
@@ -204,7 +202,7 @@ function CustomerHotelBookings() {
             </h2>
             <p className="text-muted">Manage and view all your hotel reservations</p>
           </div>
-          <Link to="/listings/hotels" className="btn btn-outline-primary">
+          <Link to="/hotels" className="btn btn-outline-primary">
             <FaHotel className="me-2" />
             Book New Hotel
           </Link>
@@ -225,7 +223,19 @@ function CustomerHotelBookings() {
               </div>
             </div>
           </div>
-          
+          <div className="col-md-4">
+            <div className="stats-card p-4 rounded-3">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 className="text-muted mb-1">Upcoming Stays</h6>
+                  <h3 className="fw-bold mb-0">{getUpcomingBookings().length}</h3>
+                </div>
+                <div className="icon-wrapper bg-warning-subtle rounded-circle p-3">
+                  <FaClock className="text-warning" size={24} />
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="col-md-4">
             <div className="stats-card p-4 rounded-3">
               <div className="d-flex justify-content-between align-items-center">
@@ -239,7 +249,55 @@ function CustomerHotelBookings() {
               </div>
             </div>
           </div>
-        </div>        
+        </div>
+
+        {/* Search and Filter Bar */}
+        <div className="filter-section mb-4">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <div className="input-group">
+                <span className="input-group-text bg-light border-end-0">
+                  <FaSearch className="text-muted" />
+                </span>
+                <input
+                  type="text"
+                  className="form-control border-start-0"
+                  placeholder="Search by hotel name, booking ID, or status..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-group">
+                <span className="input-group-text bg-light border-end-0">
+                  <FaFilter className="text-muted" />
+                </span>
+                <select
+                  className="form-select border-start-0"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="all">All Status</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="pending">Pending Payment</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div className="col-md-2">
+              <button
+                className="btn btn-outline-secondary w-100"
+                onClick={() => {
+                  setSearchTerm("");
+                  setStatusFilter("all");
+                }}
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Bookings List */}

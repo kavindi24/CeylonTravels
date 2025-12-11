@@ -236,15 +236,11 @@ function Navbar() {
                   {isProfileDropdownOpen && (
                     <ul className="dropdown-menu show profile-dropdown">
                       <li>
-                        <Link to="/profile" className="dropdown-item" onClick={closeMobileMenu}>
+                        <Link to="/dashboard/customer/profile" className="dropdown-item" onClick={closeMobileMenu}>
                           {t("profile")}
                         </Link>
                       </li>
-                      <li>
-                        <Link to="/settings" className="dropdown-item" onClick={closeMobileMenu}>
-                          {t("settings")}
-                        </Link>
-                      </li>
+                     
                       <li><hr className="dropdown-divider" /></li>
                       <li>
                         <button className="dropdown-item" onClick={handleLogout}>
