@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 
 function CustomerDashboard() {
   const userName = localStorage.getItem("userName") || sessionStorage.getItem("userName");
@@ -28,9 +30,10 @@ function CustomerDashboard() {
               <p className="card-text text-muted">
                 Browse and reserve your favorite hotels with ease.
               </p>
-              <a href="/hotels" className="btn btn-primary rounded-pill mt-3">
+              <Link to="/listings/hotels" className="btn btn-primary rounded-pill mt-3">
                 Go to Hotels
-              </a>
+              </Link>
+
             </div>
           </div>
         </div>

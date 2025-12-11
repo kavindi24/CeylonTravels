@@ -144,7 +144,7 @@ function HotelDetailsPage() {
       <div className="container py-3">
         <div className="row align-items-center">
           <div className="col">
-            <Link to="/hotels" className="btn btn-outline-primary btn-sm">
+            <Link to="/listings/hotels" className="btn btn-outline-primary btn-sm">
               <FaArrowLeft className="me-2" />
               Back to Hotels
             </Link>

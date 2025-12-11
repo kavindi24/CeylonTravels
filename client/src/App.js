@@ -14,7 +14,10 @@ import HomePage from "./pages/public/HomePage";
 import SearchResultsPage from "./pages/public/SearchResultsPage.jsx";
 import AboutPage from "./pages/public/AboutPage";
 import ContactPage from "./pages/public/ContactPage";
+
 import AllHotelsPage from "./pages/public/AllHotelsPage";
+import HotelBooking from "./pages/public/HotelBooking";
+
 import AllToursPage from "./pages/public/AllToursPage";
 import AllTransportPage from "./pages/public/AllTransportPage";
 import AllDestinationsPage from "./pages/public/AllDestinationsPage";
@@ -67,7 +70,7 @@ import CustomerDashboard from './pages/dashboard/customer/CustomerDashboard';
 import MyBookings from './pages/dashboard/customer/MyBookings';
 import Messages from './pages/dashboard/customer/Messages';
 import ProfileSettings from './pages/dashboard/customer/ProfileSettings';
-import HotelBooking from './pages/dashboard/customer/HotelBooking';
+import CustomerHotelBookings from './pages/dashboard/customer/CustomerHotelBookings';
 
 // Not Found Page
 function NotFoundPage() {
@@ -92,7 +95,11 @@ function App() {
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+
           <Route path="/listings/hotels" element={<AllHotelsPage />} />
+          <Route path="/public/book-hotel/:id" element={<HotelBooking />} />
+          
+
           <Route path="/listings/tours" element={<AllToursPage />} />
           <Route path="/listings/transport" element={<AllTransportPage />} />
           <Route path="/listings/destinations" element={<AllDestinationsPage />} />
@@ -110,7 +117,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
 
           {/* Booking & Payment Routes */}
-          <Route path="/public/book-hotel/:id" element={<HotelBooking />} />
 
           <Route path="/booking/confirm" element={<BookingConfirmationPage />} />
           <Route path="/payment" element={<PaymentPage />} />
@@ -142,6 +148,8 @@ function App() {
           </Route>
           <Route path="/dashboard" element={<DashboardLayout role="customer" />}>
             <Route path="customer" element={<CustomerDashboard />} />
+            <Route path="customer/hotels" element={<CustomerHotelBookings />} />
+            
             <Route path="customer/bookings" element={<MyBookings />} />
             <Route path="customer/messages" element={<Messages />} />
             <Route path="customer/profile" element={<ProfileSettings />} />

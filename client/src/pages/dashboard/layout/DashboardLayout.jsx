@@ -59,6 +59,19 @@ function DashboardLayout({ role = 'admin' }) {
   const customerMenu = [
  { path: '/dashboard/customer', label: 'Dashboard', icon: <RiDashboardFill /> },
 
+
+     { 
+      path: '/dashboard/customer/bookings', 
+      label: 'My Bookings', 
+      icon: <RiFileListFill />,
+      subMenu: [
+        { path: '/dashboard/customer/destinations', label: 'Saved Destinations' },
+        { path: '/dashboard/customer/hotels', label: 'Hotel Bookings' },
+        { path: '/dashboard/customer/tour-packages', label: 'Tour Packages Bookings' },
+        { path: '/dashboard/customer/transports', label: 'Transport Bookings' },
+
+      ]
+    },
   { path: '/dashboard/customer/bookings', label: 'My Bookings', icon: <RiFileListFill /> },
 
   { path: '/dashboard/customer/payments', label: 'Payment History', icon: <RiWallet3Fill /> },

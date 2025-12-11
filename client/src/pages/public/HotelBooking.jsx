@@ -14,8 +14,7 @@ import {
 
 function HotelBooking() {
   const navigate = useNavigate();
-
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  const { id } = useParams();
 
 
   const [hotel, setHotel] = useState(null);
@@ -75,7 +74,9 @@ function HotelBooking() {
 
     try {
       setBookingLoading(true);
-      const token = localStorage.getItem("token");
+
+
+    const token =localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
 
       if (!token) {
         alert("Please login to book a hotel");
@@ -84,7 +85,7 @@ function HotelBooking() {
       }
 
       await axios.post(
-        `http://localhost:5000/api/bookings/hotel`,
+        `http://localhost:5000/api/hotel-booking/hotel`,
         {
           hotelId: id,
           checkIn,
@@ -100,7 +101,7 @@ function HotelBooking() {
       );
 
       alert("Hotel booked successfully!");
-      navigate("/profile");
+      navigate("/payment");
     } catch (err) {
       alert(err.response?.data?.message || "Booking failed. Please try again.");
     } finally {
@@ -158,7 +159,7 @@ function HotelBooking() {
       <div className="container py-3" style={{ backgroundColor: 'white' }}>
         <div className="row align-items-center">
           <div className="col">
-            <Link to={`/hotel/${id}`} className="btn btn-outline-primary btn-sm">
+            <Link to={`/hotels/${hotel.id}`} className="btn btn-outline-primary btn-sm">
               <FaArrowLeft className="me-2" />
               Back to Hotel Details
             </Link>
