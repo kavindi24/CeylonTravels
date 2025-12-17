@@ -1,369 +1,363 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { FaUserCircle, FaBars, FaTimes, FaBell, FaGlobe } from "react-icons/fa";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { FaBars, FaTimes, FaBell, FaGlobe, FaChevronDown,FaSignOutAlt } from "react-icons/fa";
 import TravelLogo from "../assets/TravelLogo.png";
+import { useTranslation } from "react-i18next";
+import i18n from "../i18n";
 
 function Navbar() {
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+  const languageDropdownRef = useRef(null);
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
-  // ✅ Auth state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
-  
-  // Language state
-  const [currentLanguage, setCurrentLanguage] = useState(
-    localStorage.getItem("preferredLanguage") || "en"
-  );
+  const [currentLanguage, setCurrentLanguage] = useState("en");
 
-  // Translations
-  const translations = {
-    en: {
-      home: "Home",
-      listings: "Listings",
-      hotels: "Hotels",
-      tours: "Tours",
-      transport: "Transport",
-      destinations: "Destinations",
-      about: "About",
-      contact: "Contact",
-      blog: "Blog",
-      dashboard: "Dashboard",
-      profile: "Profile",
-      settings: "Settings",
-      logout: "Logout",
-      login: "Login",
-      register: "Register",
-      notifications: "Notifications"
-    },
-    si: {
-      home: "මුල් පිටුව",
-      listings: "ලැයිස්තු",
-      hotels: "හෝටල්",
-      tours: "සංචාර",
-      transport: "ප්‍රවාහන",
-      destinations: "ගමනාන්ත",
-      about: "අප ගැන",
-      contact: "සම්බන්ධ කරගන්න",
-      blog: "බ්ලොග්",
-      dashboard: "උපකරණ පුවරුව",
-      profile: "පැතිකඩ",
-      settings: "සැකසුම්",
-      logout: "නික්මෙන්න",
-      login: "පිවිසෙන්න",
-      register: "ලියාපදිංචි වන්න",
-      notifications: "දැනුම්දීම්"
-    },
-    ta: {
-      home: "முகப்பு",
-      listings: "பட்டியல்கள்",
-      hotels: "ஹோட்டல்கள்",
-      tours: "சுற்றுப்பயணங்கள்",
-      transport: "போக்குவரத்து",
-      destinations: "சேரிடங்கள்",
-      about: "எங்களைப் பற்றி",
-      contact: "தொடர்பு கொள்ள",
-      blog: "வலைப்பதிவு",
-      dashboard: "டாஷ்போர்டு",
-      profile: "சுயவிவரம்",
-      settings: "அமைப்புகள்",
-      logout: "வெளியேறு",
-      login: "உள்நுழைய",
-      register: "பதிவு செய்ய",
-      notifications: "அறிவிப்புகள்"
-    }
-  };
+  const { t } = useTranslation();
 
+  // Handle authentication state
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
       const role = localStorage.getItem("userRole") || sessionStorage.getItem("userRole");
+      const savedLang = localStorage.getItem("preferredLanguage") || "en";
+      
       setIsLoggedIn(!!token);
       setUserRole(role);
+      setCurrentLanguage(savedLang);
+      i18n.changeLanguage(savedLang);
     };
 
     checkAuth();
-
-    // Listen to storage changes (for multi-tab support)
-    window.addEventListener("storage", checkAuth);
-    return () => window.removeEventListener("storage", checkAuth);
+    
+    const handleStorage = () => {
+      checkAuth();
+    };
+    
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  const handleLogout = () => {
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target)) {
+        setIsLanguageDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Close mobile menu when resizing to larger screen
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 992) {
+        closeMobileMenu();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleLogout = useCallback(() => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
     sessionStorage.removeItem("authToken");
     sessionStorage.removeItem("userRole");
     setIsLoggedIn(false);
-    setUserRole(null);
     setIsProfileDropdownOpen(false);
-    closeMobileMenu();
-    window.dispatchEvent(new Event("storage"));
     navigate("/");
-  };
+  }, [navigate]);
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
+  const closeAllDropdowns = useCallback(() => {
     setIsDropdownOpen(false);
     setIsProfileDropdownOpen(false);
     setIsLanguageDropdownOpen(false);
-  };
+  }, []);
 
-  const changeLanguage = (langCode) => {
-    setCurrentLanguage(langCode);
-    localStorage.setItem("preferredLanguage", langCode);
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+    closeAllDropdowns();
+  }, [closeAllDropdowns]);
+
+  const changeLanguage = useCallback((lang) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem("preferredLanguage", lang);
+    setCurrentLanguage(lang);
     setIsLanguageDropdownOpen(false);
     closeMobileMenu();
-  };
+  }, [closeMobileMenu]);
 
-  const t = (key) => {
-    return translations[currentLanguage]?.[key] || translations.en[key] || key;
-  };
+  const toggleDropdown = useCallback((dropdownType) => {
+    // Close all other dropdowns first
+    closeAllDropdowns();
+    
+    switch (dropdownType) {
+      case 'listings':
+        setIsDropdownOpen(prev => !prev);
+        break;
+      case 'profile':
+        setIsProfileDropdownOpen(prev => !prev);
+        break;
+      case 'language':
+        setIsLanguageDropdownOpen(prev => !prev);
+        break;
+      default:
+        break;
+    }
+  }, [closeAllDropdowns]);
+
+  const dropdownItems = [
+    { path: "/listings/hotels", label: t("hotels") },
+    { path: "/listings/tours", label: t("tours") },
+    { path: "/listings/transport", label: t("transport") },
+    { path: "/listings/destinations", label: t("destinations") },
+  ];
+
+  const languageOptions = [
+    { code: "en", label: "English", native: "English" },
+    { code: "si", label: "සිංහල", native: "සිංහල" },
+    { code: "ta", label: "தமிழ்", native: "தமிழ்" },
+  ];
 
   return (
-    <nav className={`navbar navbar-expand-lg sticky-top ${isScrolled ? "bg-glass shadow-sm" : "bg-transparent"}`}>
+    <nav className="navbar navbar-expand-lg  bg-white shadow-sm fixed-top py-3">
       <div className="container">
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
+        <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
           <img src={TravelLogo} alt="CeylonTravels Logo" className="logo-img" />
         </Link>
 
-        {/* Mobile toggle */}
         <button 
           className="navbar-toggler custom-toggler" 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle navigation"
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
         >
           {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        {/* Nav links */}
         <div className={`collapse navbar-collapse ${isMobileMenuOpen ? "show" : ""}`}>
-          <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ms-auto align-items-center">
             <li className="nav-item">
-              <NavLink to="/" className="nav-link" onClick={closeMobileMenu}>
+              <NavLink 
+                to="/" 
+                className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} 
+                onClick={closeMobileMenu}
+                end
+              >
                 {t("home")}
                 <span className="nav-link-underline"></span>
               </NavLink>
             </li>
 
-            {/* Listings dropdown */}
-            <li className="nav-item dropdown">
+            <li className="nav-item dropdown" ref={dropdownRef}>
               <button 
-                className="nav-link dropdown-toggle btn btn-link" 
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="nav-link dropdown-toggle btn btn-link d-flex align-items-center gap-1"
+                onClick={() => toggleDropdown('listings')}
                 aria-expanded={isDropdownOpen}
               >
                 {t("listings")}
-                <span className="nav-link-underline"></span>
+                <FaChevronDown className={`dropdown-chevron ${isDropdownOpen ? "rotate-180" : ""}`} />
               </button>
-              {isDropdownOpen && (
-                <ul className="dropdown-menu show">
-                  <li>
-                    <Link to="/listings/hotels" className="dropdown-item" onClick={closeMobileMenu}>
-                      {t("hotels")}
+
+              <ul className={`dropdown-menu ${isDropdownOpen ? "show" : ""}`}>
+                {dropdownItems.map((item) => (
+                  <li key={item.path}>
+                    <Link 
+                      to={item.path} 
+                      className="dropdown-item" 
+                      onClick={closeMobileMenu}
+                    >
+                      {item.label}
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/listings/tours" className="dropdown-item" onClick={closeMobileMenu}>
-                      {t("tours")}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/listings/transport" className="dropdown-item" onClick={closeMobileMenu}>
-                      {t("transport")}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/listings/destinations" className="dropdown-item" onClick={closeMobileMenu}>
-                      {t("destinations")}
-                    </Link>
-                  </li>
-                </ul>
-              )}
+                ))}
+              </ul>
             </li>
 
-            <li className="nav-item">
-              <NavLink to="/about" className="nav-link" onClick={closeMobileMenu}>
-                {t("about")}
-                <span className="nav-link-underline"></span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/contact" className="nav-link" onClick={closeMobileMenu}>
-                {t("contact")}
-                <span className="nav-link-underline"></span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/blog" className="nav-link" onClick={closeMobileMenu}>
-                {t("blog")}
-                <span className="nav-link-underline"></span>
-              </NavLink>
-            </li>
+            {["about", "contact", "blog"].map((item) => (
+              <li className="nav-item" key={item}>
+                <NavLink 
+                  to={`/${item}`} 
+                  className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} 
+                  onClick={closeMobileMenu}
+                >
+                  {t(item)}
+                </NavLink>
+              </li>
+            ))}
 
+            {/* Logged In */}
             {isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <NavLink 
-                    to={userRole === "admin" ? "/dashboard/admin" : "/dashboard/customer"} 
-                    className="nav-link" 
+                  <NavLink
+                    to={userRole === "admin" ? "/dashboard/admin" : "/dashboard/customer"}
+                    className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
                     onClick={closeMobileMenu}
                   >
                     {t("dashboard")}
-                    <span className="nav-link-underline"></span>
                   </NavLink>
                 </li>
 
-                <li className="nav-item dropdown ms-lg-2">
+                <li className="nav-item ms-lg-2">
                   <button 
-                    className="nav-link profile-btn" 
-                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                    aria-expanded={isProfileDropdownOpen}
-                  >
-                    <FaUserCircle className="profile-icon" />
-                  </button>
-                  {isProfileDropdownOpen && (
-                    <ul className="dropdown-menu show profile-dropdown">
-                      <li>
-                        <Link to="/dashboard/customer/profile" className="dropdown-item" onClick={closeMobileMenu}>
-                          {t("profile")}
-                        </Link>
-                      </li>
-                     
-                      <li><hr className="dropdown-divider" /></li>
-                      <li>
-                        <button className="dropdown-item" onClick={handleLogout}>
-                          {t("logout")}
-                        </button>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-                
-                <li className="nav-item ms-lg-2 position-relative">
-                  <button
-                    className="nav-link notification-btn"
-                    onClick={() => alert("Notifications clicked!")}
-                    aria-label={t("notifications")}
+                    className="nav-link notification-btn position-relative"
+                    onClick={() => {
+                      navigate("/notifications");
+                      closeMobileMenu();
+                    }}
+                    aria-label="Notifications"
                   >
                     <FaBell />
-                    <span className="notification-badge">3</span>
                   </button>
                 </li>
-                            {/* Language Selector */}
-            <li className="nav-item dropdown">
-              <button 
-                className="nav-link dropdown-toggle btn btn-link language-btn" 
-                onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-                aria-expanded={isLanguageDropdownOpen}
-              >
-                <FaGlobe className="globe-icon" />
-              </button>
-              {isLanguageDropdownOpen && (
-                <ul className="dropdown-menu show">
-                  <li>
-                    <button 
-                      className={`dropdown-item ${currentLanguage === 'en' ? 'active-language' : ''}`}
-                      onClick={() => changeLanguage('en')}
-                    >
-                      English
-                    </button>
-                  </li>
-                  <li>
-                    <button 
-                      className={`dropdown-item ${currentLanguage === 'si' ? 'active-language' : ''}`}
-                      onClick={() => changeLanguage('si')}
-                    >
-                      සිංහල
-                    </button>
-                  </li>
-                  <li>
-                    <button 
-                      className={`dropdown-item ${currentLanguage === 'ta' ? 'active-language' : ''}`}
-                      onClick={() => changeLanguage('ta')}
-                    >
-                      தமிழ்
-                    </button>
-                  </li>
-                </ul>
-              )}
-            </li>
 
+                {/* Logout Button (replacing Profile Dropdown) */}
+                <li className="nav-item ms-lg-2">
+                  <button
+                    className="btn btn-outline-light d-flex align-items-center"
+                    onClick={handleLogout}
+                  >
+                    <FaSignOutAlt className="me-1" />
+                    {t("logout")}
+                  </button>
+                </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <NavLink to="/login" className="nav-link" onClick={closeMobileMenu}>
+                  <NavLink 
+                    to="/login" 
+                    className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} 
+                    onClick={closeMobileMenu}
+                  >
                     {t("login")}
-                    <span className="nav-link-underline"></span>
                   </NavLink>
                 </li>
                 <li className="nav-item ms-lg-2">
-                  <NavLink to="/register" className="nav-link register-link" onClick={closeMobileMenu}>
+                  <NavLink 
+                    to="/register" 
+                    className="nav-link register-link"
+                    onClick={closeMobileMenu}
+                  >
                     {t("register")}
                   </NavLink>
                 </li>
-                
               </>
             )}
+
+            {/* Language Dropdown */}
+            <li className="nav-item dropdown ms-lg-3" ref={languageDropdownRef}>
+              <button
+                className="nav-link language-btn d-flex align-items-center gap-2"
+                onClick={() => toggleDropdown('language')}
+                aria-expanded={isLanguageDropdownOpen}
+              >
+                <FaGlobe className="globe-icon" />
+                <span className="language-code d-none d-lg-inline">
+                  {currentLanguage.toUpperCase()}
+                </span>
+              </button>
+
+              <ul className={`dropdown-menu ${isLanguageDropdownOpen ? "show" : ""}`}>
+                {languageOptions.map((lang) => (
+                  <li key={lang.code}>
+                    <button 
+                      className={`dropdown-item ${currentLanguage === lang.code ? "active-language" : ""}`}
+                      onClick={() => changeLanguage(lang.code)}
+                    >
+                      <span className="d-flex justify-content-between align-items-center">
+                        <span>{lang.label}</span>
+                        {currentLanguage === lang.code && (
+                          <span className="check-mark">✓</span>
+                        )}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </li>
           </ul>
         </div>
       </div>
-      
-      {/* Styles */}
+
       <style jsx>{`
-        .bg-glass {
-          background: rgba(255, 255, 255, 0.9) !important;
-          border-bottom: 1px solid rgba(44, 123, 229, 0.1);
+        .navbar {
+          padding: 0.75rem 0;
+          background-color: white !important;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+
+          z-index: 1050;
           transition: all 0.3s ease;
-          backdrop-filter: blur(10px);
         }
-
+        
         .logo-img {
-          height: 30px;
+          height: 40px;
           width: auto;
+          transition: all 0.3s ease;
         }
-
-        @media (max-width: 768px) {
-          .logo-img {
-            height: 30px;
-          }
+        
+        .logo-img:hover {
+          transform: scale(1.05);
         }
-
+        
         .custom-toggler {
           border: none;
           background: transparent;
           font-size: 1.5rem;
           color: #2c7be5;
-          padding: 0.25rem 0.5rem;
+          padding: 0.5rem;
+          transition: all 0.3s ease;
         }
-
+        
+        .custom-toggler:hover {
+          transform: rotate(90deg);
+          color: #0a58ca;
+        }
+        
         .nav-link {
           font-weight: 500;
-          color: #2d3748 !important;
+          color: #4a5568 !important;
           margin: 0 0.5rem;
-          padding: 0.3rem 0.4rem !important;
-          transition: all 0.3s ease;
+          padding: 0.5rem 0.75rem !important;
           position: relative;
-          display: flex;
-          align-items: center;
+          transition: all 0.3s ease;
         }
-
-        .nav-link:hover,
-        .nav-link.active {
+        
+        .nav-link:hover {
           color: #2c7be5 !important;
           transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+          color: #2c7be5 !important;
+          font-weight: 600;
         }
         
         .nav-link-underline {
@@ -377,33 +371,72 @@ function Navbar() {
           transform: translateX(-50%);
           border-radius: 2px;
         }
-
+        
         .nav-link:hover .nav-link-underline,
         .nav-link.active .nav-link-underline {
           width: 70%;
         }
-
+        
+        .dropdown-toggle {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: transparent;
+          border: none;
+          color: inherit;
+          cursor: pointer;
+        }
+        
+        .dropdown-toggle:focus {
+          outline: none;
+          box-shadow: none;
+        }
+        
+        .dropdown-chevron {
+          font-size: 0.8rem;
+          transition: transform 0.3s ease;
+        }
+        
+        .rotate-180 {
+          transform: rotate(180deg);
+        }
+        
         .dropdown-menu {
           border: none;
           border-radius: 12px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-          padding: 0.5rem;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+          padding: 0.5rem 0;
           margin-top: 0.8rem;
-          backdrop-filter: blur(10px);
-          background: rgba(255, 255, 255, 0.95);
+          background: white;
           border: 1px solid rgba(44, 123, 229, 0.1);
+          animation: slideDown 0.2s ease;
         }
-
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
         .dropdown-item {
           border-radius: 8px;
-          padding: 0.7rem 1rem;
+          padding: 0.75rem 1.25rem;
           transition: all 0.2s ease;
           color: #4a5568;
           font-weight: 500;
-          display: flex;
-          align-items: center;
+          margin: 0.2rem 0.5rem;
+          border: none;
+          background: transparent;
+          text-align: left;
+          cursor: pointer;
+          width: calc(100% - 1rem);
         }
-
+        
         .dropdown-item:hover {
           background: linear-gradient(135deg, #2c7be5, #0a58ca);
           color: white;
@@ -411,117 +444,145 @@ function Navbar() {
         }
         
         .active-language {
-          background-color: #f0f7ff;
-          color: #2c7be5;
+          background: linear-gradient(135deg, #2c7be5, #0a58ca) !important;
+          color: white !important;
           font-weight: 600;
         }
-
+        
+        .check-mark {
+          font-weight: bold;
+        }
+        
         .register-link {
           background: linear-gradient(135deg, #2c7be5, #0a58ca);
           border-radius: 12px;
           color: white !important;
-          margin-left: 0.5rem;
-          padding: 0.5rem 1.2rem !important;
+          padding: 0.5rem 1.5rem !important;
           transition: all 0.3s ease;
+          font-weight: 600;
         }
-
+        
         .register-link:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(44, 123, 229, 0.4);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(44, 123, 229, 0.4);
           color: white !important;
         }
-
-        /* Language button styles */
+        
         .language-btn {
           background: transparent;
           border: none;
-          padding: 0;
           color: #2c7be5;
           display: flex;
           align-items: center;
-          justify-content: center;
-          transition: color 0.3s ease, transform 0.3s ease;
+          transition: all 0.3s ease;
+          padding: 0.5rem;
+          border-radius: 8px;
         }
-
+        
         .language-btn:hover {
-          color: #0a58ca;
+          background: rgba(44, 123, 229, 0.1);
           transform: scale(1.1);
         }
-
+        
         .globe-icon {
-          font-size: 1.3rem; /* Adjusted globe icon size */
+          font-size: 1.3rem;
         }
-
-        /* Profile button styles */
-        .profile-btn {
+        
+        .language-code {
+          font-size: 0.85rem;
+          font-weight: 600;
+        }
+        
+        .profile-btn, .notification-btn {
           background: transparent;
           border: none;
-          padding: 0;
           color: #2c7be5;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: color 0.3s ease, transform 0.3s ease;
+          padding: 0.5rem;
+          transition: all 0.3s ease;
+          border-radius: 8px;
         }
-
-        .profile-btn:hover {
-          color: #0a58ca;
+        
+        .profile-btn:hover, .notification-btn:hover {
+          background: rgba(44, 123, 229, 0.1);
           transform: scale(1.1);
         }
-
+        
         .profile-icon {
-          font-size: 1.6rem; /* Set profile icon size */
+          font-size: 1.8rem;
         }
-
+        
         .notification-btn {
-          background: transparent;
-          border: none;
-          padding: 0;
-          color: #2c7be5;
-          font-size: 1.4rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
           position: relative;
-          transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        .notification-btn:hover {
-          color: #0a58ca;
-          transform: scale(1.1);
+          font-size: 1.3rem;
         }
         
         .notification-badge {
           position: absolute;
-          top: -5px;
-          right: -5px;
+          top: 2px;
+          right: 2px;
           background: #e53e3e;
           color: white;
-          font-size: 0.6rem;
+          font-size: 0.65rem;
           font-weight: bold;
-          padding: 2px 5px;
+          width: 18px;
+          height: 18px;
           border-radius: 50%;
-          border: 1px solid white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid white;
+          animation: pulse 2s infinite;
         }
-
+        
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+        
         .profile-dropdown {
-          position: absolute;
-          right: 0;
-          left: auto;
           min-width: 180px;
+          right: 0;
+          left: auto !important;
         }
-
+        
+        .dropdown-divider {
+          border-color: rgba(44, 123, 229, 0.1);
+          margin: 0.5rem 0;
+        }
+        
+        /* Add padding to body to account for fixed navbar */
+        :global(body) {
+          padding-top: 70px !important;
+        }
+        
+        /* Mobile Styles */
         @media (max-width: 991.98px) {
+          .navbar {
+            padding: 0.5rem 0;
+          }
+          
+          :global(body) {
+            padding-top: 60px !important;
+          }
+          
           .navbar-collapse {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
+            background: white;
             padding: 1rem;
             border-radius: 12px;
-            margin-top: 1rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(44, 123, 229, 0.1);
-            max-height: 80vh;
+            max-height: calc(100vh - 80px);
             overflow-y: auto;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1050;
           }
           
           .navbar-nav {
@@ -535,7 +596,8 @@ function Navbar() {
           
           .nav-link {
             margin: 0;
-            padding: 0.5rem 0 !important;
+            padding: 0.75rem 0 !important;
+            justify-content: flex-start;
           }
           
           .dropdown-menu {
@@ -544,44 +606,83 @@ function Navbar() {
             width: 100%;
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
+            box-shadow: none;
+            border: 1px solid rgba(44, 123, 229, 0.1);
+            background: rgba(255, 255, 255, 0.9);
           }
           
           .register-link {
             margin-left: 0;
             margin-top: 0.5rem;
-            display: inline-block;
+            display: block;
             text-align: center;
+            width: 100%;
           }
-
+          
           .profile-btn, .notification-btn, .language-btn {
             margin-top: 0.5rem;
             justify-content: flex-start;
-            font-size: 1.2rem;
-            padding: 0.5rem 0;
+            padding: 0.75rem 0;
+            width: 100%;
           }
-
+          
           .profile-dropdown {
             position: static;
             width: 100%;
           }
           
-          .navbar-toggler {
-            order: 2;
-          }
-          
-          .navbar-logo {
-            order: 1;
-          }
-          
-          .navbar-collapse {
-            order: 3;
+          .language-code {
+            display: inline-block !important;
           }
         }
         
-        @media (max-width: 576px) {
-          .container {
-            padding-left: 15px;
-            padding-right: 15px;
+        /* Tablet Styles */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+          .nav-link {
+            padding: 0.5rem 0.5rem !important;
+            font-size: 0.95rem;
+          }
+        }
+        
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+          .navbar {
+            background-color: #1a1a1a !important;
+            border-bottom: 1px solid #333;
+          }
+          
+          .nav-link {
+            color: #e0e0e0 !important;
+          }
+          
+          .nav-link:hover,
+          .nav-link.active {
+            color: #60a5fa !important;
+          }
+          
+          .dropdown-menu {
+            background-color: #2d2d2d !important;
+            border: 1px solid #444;
+          }
+          
+          .dropdown-item {
+            color: #e0e0e0;
+          }
+          
+          .dropdown-item:hover {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+          }
+          
+          @media (max-width: 991.98px) {
+            .navbar-collapse {
+              background-color: #2d2d2d !important;
+              border: 1px solid #444;
+            }
+            
+            .dropdown-menu {
+              background-color: #3d3d3d !important;
+            }
           }
         }
       `}</style>

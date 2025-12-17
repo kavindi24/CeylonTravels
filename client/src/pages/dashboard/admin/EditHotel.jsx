@@ -6,8 +6,6 @@ import {
   FaMapMarkerAlt, 
   FaDollarSign, 
   FaStar, 
-  FaFileAlt,
-  FaImage, 
   FaPlus, 
   FaTrash,
   FaSave,
@@ -15,11 +13,7 @@ import {
   FaUpload,
   FaEdit,
   FaPhone,
-  FaEnvelope,
-  FaMapPin,
-  FaUser,
-  FaComment
-} from "react-icons/fa";
+  FaEnvelope,} from "react-icons/fa";
 
 export default function EditHotel() {
   const { id } = useParams();

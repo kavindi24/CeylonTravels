@@ -92,6 +92,9 @@ function DashboardLayout({ role = 'admin' }) {
           <h4 className="m-0 d-flex align-items-center">
             {!isSidebarCollapsed && <><FaGlobe className="me-2" /> Ceylon Travels</>}
           </h4>
+          <hr></hr>
+          <hr></hr>
+          <hr></hr>
           <button 
             className="btn btn-sm btn-outline-light rounded-circle p-1"
             onClick={toggleSidebar}
@@ -169,6 +172,7 @@ function DashboardLayout({ role = 'admin' }) {
       </aside>
 
       <main className="dashboard-main flex-grow-1 p-4">
+        <hr></hr>
         <Outlet />
       </main>
 

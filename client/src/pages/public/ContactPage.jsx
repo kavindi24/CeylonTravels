@@ -89,7 +89,7 @@ function ContactPage() {
                   </div>
                   <div>
                     <h6 className="fw-semibold mb-0">Phone</h6>
-                    <span>+94 77 123 4567</span>
+                    <span>+94 11 234 5678</span>
                   </div>
                 </li>
                 <li className="mb-3 d-flex align-items-start contact-item">

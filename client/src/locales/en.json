@@ -1,0 +1,17 @@
+{
+  "home": "Home",
+  "listings": "Listings",
+  "hotels": "Hotels",
+  "tours": "Tours",
+  "transport": "Transport",
+  "destinations": "Destinations",
+  "about": "About",
+  "contact": "Contact",
+  "blog": "Blog",
+  "dashboard": "Dashboard",
+  "profile": "Profile",
+  "logout": "Logout",
+  "login": "Login",
+  "register": "Register",
+  "notifications": "Notifications"
+}

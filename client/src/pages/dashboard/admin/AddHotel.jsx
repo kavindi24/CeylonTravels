@@ -6,18 +6,13 @@ import {
   FaMapMarkerAlt, 
   FaDollarSign, 
   FaStar, 
-  FaFileAlt,
-  FaImage, 
   FaPlus, 
   FaTrash,
   FaSave,
   FaArrowLeft,
   FaUpload,
   FaPhone,
-  FaEnvelope,
-  FaMapPin,
-  FaUser,
-  FaComment
+  FaEnvelope
 } from "react-icons/fa";
 
 export default function AddHotel() {
@@ -49,7 +44,6 @@ export default function AddHotel() {
     features: "" 
   });
   const [amenity, setAmenity] = useState("");
-  const [review, setReview] = useState({ user: "", rating: "", comment: "" });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -125,17 +119,6 @@ export default function AddHotel() {
     setHotelData({ ...hotelData, roomTypes: updatedRooms });
   };
 
-  const handleAddReview = () => {
-    if (review.user.trim() !== "" && review.comment.trim() !== "") {
-      setHotelData({ ...hotelData, reviews: [...hotelData.reviews, { ...review }] });
-      setReview({ user: "", rating: "", comment: "" });
-    }
-  };
-
-  const handleRemoveReview = (index) => {
-    const updatedReviews = hotelData.reviews.filter((_, i) => i !== index);
-    setHotelData({ ...hotelData, reviews: updatedReviews });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

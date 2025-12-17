@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
 function CustomerDashboard() {
-  const userName = localStorage.getItem("userName") || sessionStorage.getItem("userName");
+  // Session (current login) first, then persistent (old) localStorage
+  const userName =
+    sessionStorage.getItem("userName") ||
+    localStorage.getItem("userName") ||
+    "Customer";
 
   return (
     <div className="container py-5">
@@ -15,7 +18,8 @@ function CustomerDashboard() {
           boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
         }}
       >
-        <h1 className="fw-bold mb-2">Welcome, {userName} </h1>
+        <h1 className="fw-bold mb-2">Welcome, {userName}</h1>
+
         <p className="lead opacity-90">
           Ready to explore and book your next adventure in Sri Lanka?
         </p>
@@ -30,10 +34,12 @@ function CustomerDashboard() {
               <p className="card-text text-muted">
                 Browse and reserve your favorite hotels with ease.
               </p>
-              <Link to="/listings/hotels" className="btn btn-primary rounded-pill mt-3">
+              <Link
+                to="/public/all-hotels"
+                className="btn btn-primary rounded-pill mt-3"
+              >
                 Go to Hotels
               </Link>
-
             </div>
           </div>
         </div>
@@ -45,9 +51,12 @@ function CustomerDashboard() {
               <p className="card-text text-muted">
                 View and manage all your upcoming and past bookings.
               </p>
-              <a href="/my-bookings" className="btn btn-primary rounded-pill mt-3">
+              <Link
+                to="/my-bookings"
+                className="btn btn-primary rounded-pill mt-3"
+              >
                 View Bookings
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -59,9 +68,12 @@ function CustomerDashboard() {
               <p className="card-text text-muted">
                 Update your personal info, password, and preferences.
               </p>
-              <a href="/profile" className="btn btn-primary rounded-pill mt-3">
+              <Link
+                to="/profile"
+                className="btn btn-primary rounded-pill mt-3"
+              >
                 Edit Profile
-              </a>
+              </Link>
             </div>
           </div>
         </div>

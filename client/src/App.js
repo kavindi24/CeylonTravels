@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+import NotificationsPage from "./pages/notifications/NotificationsPage";
 
 // Public Pages
 import HomePage from "./pages/public/HomePage";
@@ -96,6 +97,8 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
 
+          <Route path="/notifications" element={<NotificationsPage />} />
+          
           <Route path="/listings/hotels" element={<AllHotelsPage />} />
           <Route path="/public/book-hotel/:id" element={<HotelBooking />} />
           

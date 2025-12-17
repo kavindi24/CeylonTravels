@@ -7,7 +7,6 @@ import {
   FaUsers,
   FaHotel,
   FaCalendarCheck,
-  FaChartLine,
   FaMoneyBillWave,
   FaMapMarkedAlt,
   FaCar,
@@ -94,22 +93,23 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="admin-dashboard">
+    <div className="admin-dashboard py-5 container">
 
       {/* Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2 className="h3 mb-1 fw-bold" style={{ color: '#1f2937' }}>
-            Admin Overview
-          </h2>
-          <p className="text-muted mb-0">
-            Welcome Admin! Here's your activity summary.
-          </p>
-        </div>
-
-        <button className="btn btn-primary d-flex align-items-center">
-          <FaChartLine className="me-2" /> Generate Report
-        </button>
+      <div className=" justify-content-between align-items-center mb-8">
+      <div
+        className="p-4 rounded-4 text-white mb-5"
+        style={{
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h1 className="fw-bold mb-2">Welcome, to Ceylon Travels Admin Dashboard</h1>
+        <p className="lead opacity-90">
+          Admin Dashboard - Manage Users, Listings, and Reports
+        </p>
+      </div>
+    
       </div>
 
       {/* Stats Cards */}
@@ -190,25 +190,16 @@ function AdminDashboard() {
       </div>
 
       {/* Custom Styles */}
-      <style>
-        {`
-          .custom-card {
-            border-radius: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-          }
-          
-          .custom-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-          }
-
-          .bg-primary-subtle { background-color: #e3f2fd !important; }
-          .bg-success-subtle { background-color: #e8f5e9 !important; }
-          .bg-warning-subtle { background-color: #fff3e0 !important; }
-          .bg-info-subtle { background-color: #e0f7fa !important; }
-          .bg-danger-subtle { background-color: #ffebee !important; }
-        `}
-      </style>
+            {/* Custom CSS */}
+      <style>{`
+        .hover-scale {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-scale:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+      `}</style>
 
     </div>
   );
