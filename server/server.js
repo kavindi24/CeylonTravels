@@ -23,9 +23,7 @@ require('./models/HotelBooking');
 const userRoutes = require('./routes/userRoutes');  
 const adminRoutes = require('./routes/adminRoutes'); 
 const hotelRoutes = require("./routes/hotelRoutes");
-const destinationRoutes = require("./routes/destinationRoutes");
 const tourPackageRoutes = require("./routes/tourPackageRoutes");
-const transportRoutes = require("./routes/transportRoutes");
 
 // Import models for associations
 require("./models/Provider");
@@ -52,6 +50,7 @@ app.use("/api/transports",require("./routes/transportRoutes"));
 app.use("/api/destinations", require("./routes/destinationRoutes"));
 app.use("/api/search", require("./routes/searchRoutes"));
 app.use("/api/hotel-booking", require("./routes/hotelBookingRoutes"));
+app.use("/api/chatbot", require("./routes/chatbotRoutes"));
 
 
 // Sync DB

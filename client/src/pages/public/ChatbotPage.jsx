@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { FaCompass, FaHotel, FaUtensils, FaPlane, FaRobot, FaUserAlt } from 'react-icons/fa';
 
 function ChatbotPage() {
   const [messages, setMessages] = useState([
@@ -13,18 +14,6 @@ function ChatbotPage() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Sample responses for demonstration
-  const botResponses = [
-    "Sri Lanka offers beautiful beaches, ancient temples, and amazing wildlife!",
-    "The best time to visit is between December and March for the west coast and south coast.",
-    "I'd recommend visiting Sigiriya Rock Fortress, Ella, and the beaches of Mirissa.",
-    "You'll need a visa to visit Sri Lanka. You can apply for an Electronic Travel Authorization (ETA) online.",
-    "Traditional Sri Lankan cuisine is a must-try! Don't miss hoppers, kottu, and delicious seafood.",
-    "The cultural triangle featuring Anuradhapura, Polonnaruwa, and Dambulla is a UNESCO World Heritage site.",
-    "For wildlife enthusiasts, Yala and Udawalawe National Parks offer incredible safari experiences.",
-    "Don't forget to experience a scenic train ride through the tea plantations in Nuwara Eliya!"
-  ];
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -33,7 +22,7 @@ function ChatbotPage() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (inputText.trim() === "") return;
 
@@ -49,30 +38,42 @@ function ChatbotPage() {
     setInputText("");
     setIsTyping(true);
 
-    // Simulate bot response after a delay
-    setTimeout(() => {
-      const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+    // Call your actual API endpoint here
+    try {
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          message: inputText,
+          conversationHistory: messages.slice(-5) // Send last 5 messages for context
+        }),
+      });
+
+      const data = await response.json();
+      
       const newBotMessage = {
         id: messages.length + 2,
-        text: randomResponse,
+        text: data.reply,
         sender: "bot",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, newBotMessage]);
+    } catch (error) {
+      console.error('Error fetching bot response:', error);
+      // Fallback response in case of error
+      const errorMessage = {
+        id: messages.length + 2,
+        text: "I apologize, but I'm having trouble connecting to the travel database. Please try again in a moment.",
+        sender: "bot",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
-
-  const quickQuestions = [
-    "Best places to visit?",
-    "Visa requirements?",
-    "Local cuisine?",
-    "Best time to travel?",
-    "Cultural sites?",
-    "Wildlife experiences?",
-    "Transportation options?",
-    "Beach recommendations?"
-  ];
 
   const handleQuickQuestion = (question) => {
     setInputText(question);
@@ -100,12 +101,11 @@ function ChatbotPage() {
               border: "none"
             }}>
               <div className="d-flex align-items-center">
-                <div className="bg-white rounded-circle p-2 shadow-sm me-3" style={{
-                  background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+                <div className="bg-white rounded-circle p-3 shadow-sm me-3" style={{
+                  background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
+                  boxShadow: "0 4px 15px rgba(0, 121, 107, 0.4)"
                 }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  </svg>
+                  <FaRobot className="text-white" size={28} />
                 </div>
                 <div>
                   <h2 className="mb-0 text-white">Ceylon Travel Assistant</h2>
@@ -129,6 +129,22 @@ function ChatbotPage() {
                       key={message.id} 
                       className={`d-flex mb-4 ${message.sender === "user" ? "justify-content-end" : "justify-content-start"}`}
                     >
+                      {/* Bot message icon */}
+                      {message.sender === "bot" && (
+                        <div className="bot-avatar me-2 mt-1">
+                          <div className="rounded-circle p-2" style={{
+                            background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
+                            width: "36px",
+                            height: "36px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                          }}>
+                            <FaRobot className="text-white" size={16} />
+                          </div>
+                        </div>
+                      )}
+                      
                       <div 
                         className={`position-relative rounded-4 p-3 ${message.sender === "user" 
                           ? "user-message" 
@@ -151,11 +167,39 @@ function ChatbotPage() {
                           </div>
                         )}
                       </div>
+                      
+                      {/* User message icon (optional - can be added if you want) */}
+                      {message.sender === "user" && (
+                        <div className="user-avatar ms-2 mt-1">
+                          <div className="rounded-circle p-2" style={{
+                            background: "linear-gradient(135deg, #1a4b78 0%, #2a69a6 100%)",
+                            width: "36px",
+                            height: "36px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                          }}>
+                            <FaUserAlt className="text-white" size={16} />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                   
                   {isTyping && (
                     <div className="d-flex justify-content-start mb-3">
+                      <div className="bot-avatar me-2 mt-1">
+                        <div className="rounded-circle p-2" style={{
+                          background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
+                          width: "36px",
+                          height: "36px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}>
+                          <FaRobot className="text-white" size={16} />
+                        </div>
+                      </div>
                       <div className="bot-message rounded-4 p-3">
                         <div className="typing-indicator">
                           <span></span>
@@ -177,44 +221,90 @@ function ChatbotPage() {
                 <div className="quick-questions mb-3">
                   <p className="small text-light mb-2">Quick questions:</p>
                   <div className="d-flex flex-wrap gap-2">
-                    {quickQuestions.map((question, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        className="btn btn-sm rounded-pill"
-                        onClick={() => handleQuickQuestion(question)}
-                        style={{ 
-                          background: "linear-gradient(135deg, #1a4b78 0%, #2a69a6 100%)",
-                          border: "1px solid #2a69a6",
-                          color: "white"
-                        }}
-                      >
-                        {question}
-                      </button>
-                    ))}
+                    <button
+                      type="button"
+                      className="btn btn-sm rounded-pill d-flex align-items-center"
+                      onClick={() => handleQuickQuestion("What are the best places to visit in Sri Lanka?")}
+                      style={{ 
+                        background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
+                        border: "1px solid #00796b",
+                        color: "white"
+                      }}
+                    >
+                      <FaCompass className="me-1" />
+                      Best places to visit?
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-sm rounded-pill d-flex align-items-center"
+                      onClick={() => handleQuickQuestion("What are the visa requirements for Sri Lanka?")}
+                      style={{ 
+                        background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
+                        border: "1px solid #00796b",
+                        color: "white"
+                      }}
+                    >
+                      <FaPlane className="me-1" />
+                      Visa requirements?
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-sm rounded-pill d-flex align-items-center"
+                      onClick={() => handleQuickQuestion("What is traditional Sri Lankan cuisine?")}
+                      style={{ 
+                        background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
+                        border: "1px solid #00796b",
+                        color: "white"
+                      }}
+                    >
+                      <FaUtensils className="me-1" />
+                      Local cuisine?
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-sm rounded-pill d-flex align-items-center"
+                      onClick={() => handleQuickQuestion("Where are the best hotels in Sri Lanka?")}
+                      style={{ 
+                        background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
+                        border: "1px solid #00796b",
+                        color: "white"
+                      }}
+                    >
+                      <FaHotel className="me-1" />
+                      Best hotels?
+                    </button>
                   </div>
                 </div>
                 
                 <form onSubmit={handleSendMessage}>
                   <div className="input-group">
+                    <div className="input-group-text rounded-start-pill border-0" style={{ 
+                      backgroundColor: "#0a192f", 
+                      border: "1px solid #1d3a5c",
+                      borderRight: "none"
+                    }}>
+                      <FaRobot className="text-light" />
+                    </div>
                     <input
                       type="text"
-                      className="form-control rounded-pill border-0"
+                      className="form-control border-0"
                       placeholder="Ask about Sri Lanka travel..."
                       value={inputText}
                       onChange={(e) => setInputText(e.target.value)}
                       style={{ 
                         backgroundColor: "#0a192f", 
                         color: "white",
-                        border: "1px solid #1d3a5c"
+                        border: "1px solid #1d3a5c",
+                        borderLeft: "none",
+                        borderRight: "none"
                       }}
                     />
                     <button
                       type="submit"
-                      className="btn btn-primary rounded-pill ms-2 px-4"
+                      className="btn btn-primary rounded-end-pill px-4"
                       disabled={inputText.trim() === ""}
                       style={{ 
-                        background: "linear-gradient(90deg, #1a4b78 0%, #2a69a6 100%)",
+                        background: "linear-gradient(135deg, #00796b 0%, #004d40 100%)",
                         border: "none"
                       }}
                     >
@@ -226,8 +316,9 @@ function ChatbotPage() {
             </div>
           </div>
           
-          <div className="text-center mt-4 text-light">
-            <p>Powered by Ceylon Travel Experts • 24/7 Assistance</p>
+          <div className="text-center mt-4 text-light d-flex align-items-center justify-content-center">
+            <FaRobot className="me-2" />
+            <p className="mb-0">Powered by Ceylon Travel Experts • 24/7 Assistance</p>
           </div>
         </div>
       </div>
@@ -243,7 +334,7 @@ function ChatbotPage() {
         }
         
         .chat-container::-webkit-scrollbar-thumb {
-          background: linear-gradient(45deg, #1a4b78, #2a69a6);
+          background: linear-gradient(45deg, #00796b, #004d40);
           border-radius: 10px;
         }
         
@@ -274,7 +365,7 @@ function ChatbotPage() {
           width: 0;
           height: 0;
           border-top: 8px solid transparent;
-          border-bottom: 8px solid transparent;
+          border-bottom: 8px transparent;
           border-right: 8px solid #1a4b78;
           margin-left: -8px;
         }
@@ -335,7 +426,7 @@ function ChatbotPage() {
         }
         
         .btn:hover {
-          background: linear-gradient(135deg, #2a69a6 0%, #3b82c7 100%) !important;
+          background: linear-gradient(135deg, #009688 0%, #00695c 100%) !important;
           transform: translateY(-2px);
           transition: all 0.2s ease;
         }
@@ -343,12 +434,21 @@ function ChatbotPage() {
         .form-control:focus {
           background-color: #112240;
           color: white;
-          border-color: #2a69a6;
-          box-shadow: 0 0 0 0.2rem rgba(42, 105, 166, 0.25);
+          border-color: #00796b;
+          box-shadow: 0 0 0 0.2rem rgba(0, 121, 107, 0.25);
         }
         
         .form-control::placeholder {
           color: #5a7a9f;
+        }
+        
+        /* Bot and User avatar animations */
+        .bot-avatar, .user-avatar {
+          transition: transform 0.3s ease;
+        }
+        
+        .bot-avatar:hover, .user-avatar:hover {
+          transform: scale(1.1);
         }
       `}</style>
     </div>
