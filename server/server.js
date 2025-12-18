@@ -17,7 +17,8 @@ require('./models/TourPackage');
 require('./models/Provider');
 require('./models/Transport');
 require('./models/HotelBooking');
-
+require('./models/Notification');
+require('./models/TourPackageBooking');
 
 // Import routes
 const userRoutes = require('./routes/userRoutes');  
@@ -30,6 +31,7 @@ require("./models/Provider");
 require("./models/Transport");
 
 const { Destination, Highlight } = require("./models"); 
+
 
 const app = express();
 
@@ -51,7 +53,8 @@ app.use("/api/destinations", require("./routes/destinationRoutes"));
 app.use("/api/search", require("./routes/searchRoutes"));
 app.use("/api/hotel-booking", require("./routes/hotelBookingRoutes"));
 app.use("/api/chatbot", require("./routes/chatbotRoutes"));
-
+app.use("/api/notifications", require("./routes/notificationRoutes"));
+app.use("/api/tour-packages", require("./routes/tourPackageBookingRoutes"));
 
 // Sync DB
 sequelize.sync({ alter: true })

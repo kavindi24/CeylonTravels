@@ -198,7 +198,7 @@ function TourDetailsPage() {
 
                   <div className="booking-actions">
                     <Link 
-                      to={`/booking/tour/${tour.id}`}
+                      to={`/public/book-package/${tour.id}`}
                       className="btn btn-primary btn-lg w-100 mb-3"
                     >
                       Book Now

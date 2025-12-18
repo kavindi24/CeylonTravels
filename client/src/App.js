@@ -32,7 +32,9 @@ import ChatbotPage from "./pages/public/ChatbotPage";
 import TermsPage from "./pages/public/TermsPage";
 import PrivacyPage from "./pages/public/PrivacyPage";
 import BookingConfirmationPage from "./pages/public/BookingConfirmationPage";
+import TourPackageBooking from "./pages/public/TourPackageBooking";
 import PaymentPage from "./pages/public/PaymentPage";
+
 import PaymentSuccessPage from "./pages/public/PaymentSuccessPage";
 import PaymentFailedPage from "./pages/public/PaymentFailedPage";
 
@@ -68,10 +70,10 @@ import TransportList from './pages/dashboard/admin/TransportList';
 
 // CUSTOMER DASHBOARD PAGES
 import CustomerDashboard from './pages/dashboard/customer/CustomerDashboard';
-import MyBookings from './pages/dashboard/customer/MyBookings';
 import Messages from './pages/dashboard/customer/Messages';
 import ProfileSettings from './pages/dashboard/customer/ProfileSettings';
 import CustomerHotelBookings from './pages/dashboard/customer/CustomerHotelBookings';
+import CustomerTourBookings from './pages/dashboard/customer/CustomerTourBooking';
 
 // Not Found Page
 function NotFoundPage() {
@@ -101,7 +103,7 @@ function App() {
           
           <Route path="/listings/hotels" element={<AllHotelsPage />} />
           <Route path="/public/book-hotel/:id" element={<HotelBooking />} />
-          
+          <Route path="/public/book-package/:id" element={<TourPackageBooking />} />
 
           <Route path="/listings/tours" element={<AllToursPage />} />
           <Route path="/listings/transport" element={<AllTransportPage />} />
@@ -120,9 +122,8 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
 
           {/* Booking & Payment Routes */}
-
-          <Route path="/booking/confirm" element={<BookingConfirmationPage />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/booking/confirm" element={<BookingConfirmationPage />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
           <Route path="/payment/failed" element={<PaymentFailedPage />} />
 
@@ -151,9 +152,9 @@ function App() {
           </Route>
           <Route path="/dashboard" element={<DashboardLayout role="customer" />}>
             <Route path="customer" element={<CustomerDashboard />} />
+
             <Route path="customer/hotels" element={<CustomerHotelBookings />} />
-            
-            <Route path="customer/bookings" element={<MyBookings />} />
+            <Route path="customer/tours" element={<CustomerTourBookings />} />
             <Route path="customer/messages" element={<Messages />} />
             <Route path="customer/profile" element={<ProfileSettings />} />
           </Route>

@@ -35,7 +35,7 @@ function CustomerDashboard() {
                 Browse and reserve your favorite hotels with ease.
               </p>
               <Link
-                to="/public/all-hotels"
+                to="/listings/hotels"
                 className="btn btn-primary rounded-pill mt-3"
               >
                 Go to Hotels
@@ -52,7 +52,7 @@ function CustomerDashboard() {
                 View and manage all your upcoming and past bookings.
               </p>
               <Link
-                to="/my-bookings"
+                to="/dashboard/customer/bookings"
                 className="btn btn-primary rounded-pill mt-3"
               >
                 View Bookings
@@ -69,7 +69,7 @@ function CustomerDashboard() {
                 Update your personal info, password, and preferences.
               </p>
               <Link
-                to="/profile"
+                to="/dashboard/customer/profile"
                 className="btn btn-primary rounded-pill mt-3"
               >
                 Edit Profile
