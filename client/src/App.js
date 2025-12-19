@@ -30,9 +30,9 @@ import BlogPage from "./pages/public/BlogPage";
 import ChatbotPage from "./pages/public/ChatbotPage";
 import BookingConfirmationPage from "./pages/public/BookingConfirmationPage";
 import TourPackageBooking from "./pages/public/TourPackageBooking";
+import TransportBooking from "./pages/public/TransportBooking.jsx";
 
-import PaymentPage from "./pages/public/PaymentPage";
-
+import Payment from "./pages/public/Payment";
 import PaymentSuccessPage from "./pages/public/PaymentSuccessPage";
 import PaymentFailedPage from "./pages/public/PaymentFailedPage";
 
@@ -66,12 +66,14 @@ import EditTourPackage from './pages/dashboard/admin/EditTourPackage';
 import AddTransport from './pages/dashboard/admin/AddTransport';
 import EditTransport from './pages/dashboard/admin/EditTransport';
 import TransportList from './pages/dashboard/admin/TransportList';
+import Settings from "./pages/dashboard/admin/Settings.jsx";
 
 // CUSTOMER DASHBOARD PAGES
 import CustomerDashboard from './pages/dashboard/customer/CustomerDashboard';
 import ProfileSettings from './pages/dashboard/customer/ProfileSettings';
 import CustomerHotelBookings from './pages/dashboard/customer/CustomerHotelBookings';
 import CustomerTourBookings from './pages/dashboard/customer/CustomerTourBooking';
+import CustomerTransportBooking from './pages/dashboard/customer/CustomerTransportBooking';
 
 // Not Found Page
 function NotFoundPage() {
@@ -102,7 +104,7 @@ function App() {
           <Route path="/listings/hotels" element={<AllHotelsPage />} />
           <Route path="/public/book-hotel/:id" element={<HotelBooking />} />
           <Route path="/public/book-package/:id" element={<TourPackageBooking />} />
-
+          <Route path="/public/book-transport/:id" element={<TransportBooking />} />
           <Route path="/listings/tours" element={<AllToursPage />} />
           <Route path="/listings/transport" element={<AllTransportPage />} />
           <Route path="/listings/destinations" element={<AllDestinationsPage />} />
@@ -118,7 +120,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
 
           {/* Booking & Payment Routes */}
-          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="/booking/confirm" element={<BookingConfirmationPage />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
           <Route path="/payment/failed" element={<PaymentFailedPage />} />
@@ -130,6 +132,7 @@ function App() {
             <Route path="admin/bookings" element={<AdminManageBookings />} />
             <Route path="admin/listings" element={<ManageListings />} />
             <Route path="admin/reports" element={<Reports />} />
+            <Route path="admin/settings" element={<Settings />} />
             
             <Route path="admin/add-destination" element={<AddDestination />} />
             <Route path="admin/edit-destination/:id" element={<EditDestination />} />
@@ -152,6 +155,7 @@ function App() {
 
             <Route path="customer/hotels" element={<CustomerHotelBookings />} />
             <Route path="customer/tours" element={<CustomerTourBookings />} />
+            <Route path="customer/transports" element={<CustomerTransportBooking />} />
             <Route path="customer/profile" element={<ProfileSettings />} />
           </Route>
           {/* 404 Fallback */}

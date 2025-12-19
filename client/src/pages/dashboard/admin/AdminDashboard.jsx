@@ -26,13 +26,13 @@ function AdminDashboard() {
   };
 
   const [stats, setStats] = useState({
-    users: 0,
-    destinations: 0,
-    hotels: 0,
-    providers: 0,
-    transports: 0,
-    bookings: 0,
-    revenue: 0,
+    users: 5,
+    destinations: 10,
+    hotels: 6,
+    providers: 3,
+    transports: 3,
+    bookings: 15,
+    revenue: 375000,
   });
 
   useEffect(() => {

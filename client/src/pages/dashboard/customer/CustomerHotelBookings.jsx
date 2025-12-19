@@ -303,7 +303,7 @@ function CustomerHotelBookings() {
               <FaHotel className="text-muted mb-3" size={64} />
               <h4>No bookings found</h4>
               <p className="text-muted mb-4">You haven't made any hotel bookings yet</p>
-              <Link to="/hotels" className="btn btn-primary">
+              <Link to="/listings/hotels" className="btn btn-primary">
                 Explore Hotels
               </Link>
             </div>
@@ -402,7 +402,7 @@ function CustomerHotelBookings() {
                             
                             {booking.status === "Pending Payment" && (
                               <Link
-                                to={`/payment/${booking.id}`}   // or just "/payment" if you don't use the id
+                                to={`/payment`}   // or just "/payment" if you don't use the id
                                 className="btn btn-success btn-sm"
                               >
                                 <FaCreditCard className="me-1" />

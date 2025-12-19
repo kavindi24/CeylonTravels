@@ -12,7 +12,7 @@ import {
   FaMapMarkerAlt
 } from "react-icons/fa";
 
-function CustomerTourBookings() {
+function CustomerTransportBookings() {
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -153,12 +153,12 @@ useEffect(() => {
       <div className="container py-4">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
-            <h1 className="fw-bold display-5 mb-2">My Tour Bookings</h1>
-            <p className="text-muted">Manage and track all your tour reservations</p>
+            <h1 className="fw-bold display-5 mb-2">My Transport Bookings</h1>
+            <p className="text-muted">Manage and track all your transport reservations</p>
           </div>
-          <Link to="/listings/tours" className="btn btn-outline-primary">
+          <Link to="/listings/transport" className="btn btn-outline-primary">
             <FaArrowLeft className="me-2" />
-            Book New Tour
+            Book New Transport
           </Link>
         </div>
 
@@ -212,8 +212,8 @@ useEffect(() => {
         {filteredBookings.length === 0 ? (
           <div className="text-center py-5">
             <h4>No bookings found</h4>
-            <p className="text-muted">You haven't made any tour bookings yet.</p>
-            <Link to="/listings/tours" className="btn btn-primary">Explore Tours</Link>
+            <p className="text-muted">You haven't made any transport bookings yet.</p>
+            <Link to="/listings/transport" className="btn btn-primary">Explore Transport</Link>
           </div>
         ) : (
           <div className="row g-4">
@@ -276,4 +276,4 @@ useEffect(() => {
   );
 }
 
-export default CustomerTourBookings;
+export default CustomerTransportBookings;

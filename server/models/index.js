@@ -47,6 +47,9 @@ TourPackageBooking.belongsTo(TourPackage, { foreignKey: "packageId" });
 Hotel.hasMany(HotelBooking, { foreignKey: "hotelId", onDelete: "CASCADE" });
 HotelBooking.belongsTo(Hotel, { foreignKey: "hotelId" });
 
+
+
+
 // ====================
 // Sync DB
 // ====================
@@ -72,6 +75,6 @@ module.exports = {
   Hotel,
   User,
   HotelBooking,
-  TourPackage,          // ✅ Added
-  TourPackageBooking,   // ✅ Added
+  TourPackage,          
+  TourPackageBooking,   
 };

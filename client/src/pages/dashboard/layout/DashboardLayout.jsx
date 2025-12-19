@@ -27,7 +27,7 @@ function DashboardLayout({ role = 'admin' }) {
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       localStorage.clear();
-      navigate('/login');
+      navigate('/');
     }
   };
 
@@ -49,7 +49,6 @@ function DashboardLayout({ role = 'admin' }) {
       ]
     },
     { path: '/dashboard/admin/reports', label: 'Reports', icon: <FaFileAlt /> },
-    { path: '/dashboard/admin/analytics', label: 'Analytics', icon: <FaChartPie /> },
     { path: '/dashboard/admin/settings', label: 'Settings', icon: <FaCog /> },
 
   ];
