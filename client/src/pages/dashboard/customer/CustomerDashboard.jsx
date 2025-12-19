@@ -52,7 +52,7 @@ function CustomerDashboard() {
                 View and manage all your upcoming and past bookings.
               </p>
               <Link
-                to="/dashboard/customer/bookings"
+                to="/dashboard/customer/hotels"
                 className="btn btn-primary rounded-pill mt-3"
               >
                 View Bookings

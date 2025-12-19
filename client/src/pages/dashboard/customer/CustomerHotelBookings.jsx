@@ -17,7 +17,6 @@ import {
   FaMapMarkerAlt,
   FaTrash
 } from "react-icons/fa";
-import HotelBooking from "../../public/HotelBooking";
 
 function CustomerHotelBookings() {
   const [bookings, setBookings] = useState([]);

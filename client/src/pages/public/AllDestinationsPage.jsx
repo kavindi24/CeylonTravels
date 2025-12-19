@@ -12,7 +12,6 @@ import {
   FaSort,
   FaStar,
   FaCalendarAlt,
-  FaMountain,
   FaUmbrellaBeach,
   FaMonument,
   FaHiking,
@@ -32,11 +31,10 @@ function AllDestinationsPage() {
   // Category mapping with icons
   const categories = {
     "all": { name: "All Destinations", icon: FaMapMarkerAlt },
-    "beach": { name: "Beach & Coastal", icon: FaUmbrellaBeach },
-    "cultural": { name: "Cultural & Heritage", icon: FaMonument },
+    "photographers": { name: "Beach & Coastal", icon: FaUmbrellaBeach },
+    "history buffs": { name: "Cultural & Heritage", icon: FaMonument },
     "nature": { name: "Nature & Wildlife", icon: FaLeaf },
     "adventure": { name: "Adventure & Hiking", icon: FaHiking },
-    "hill": { name: "Hill Country", icon: FaMountain }
   };
 
   useEffect(() => {
@@ -218,9 +216,7 @@ function AllDestinationsPage() {
           <div className="container">
             <div className="text-center mb-5">
               <div className="featured-header d-inline-flex align-items-center justify-content-center gap-3 mb-3">
-                <FaCrown className="featured-crown text-warning" size={32} />
                 <h2 className="fw-bold mb-0">Featured Destinations</h2>
-                <FaCrown className="featured-crown text-warning" size={32} />
               </div>
               <p className="text-muted lead">
                 Handpicked destinations loved by travelers worldwide

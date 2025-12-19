@@ -1,5 +1,4 @@
 // src/App.js
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -29,10 +28,9 @@ import TransportDetailPage from "./pages/public/TransportDetailPage";
 import DestinationDetailsPage from './pages/public/DestinationDetailsPage';
 import BlogPage from "./pages/public/BlogPage";
 import ChatbotPage from "./pages/public/ChatbotPage";
-import TermsPage from "./pages/public/TermsPage";
-import PrivacyPage from "./pages/public/PrivacyPage";
 import BookingConfirmationPage from "./pages/public/BookingConfirmationPage";
 import TourPackageBooking from "./pages/public/TourPackageBooking";
+
 import PaymentPage from "./pages/public/PaymentPage";
 
 import PaymentSuccessPage from "./pages/public/PaymentSuccessPage";
@@ -48,6 +46,7 @@ import DashboardLayout from './pages/dashboard/layout/DashboardLayout';
 // ADMIN DASHBOARD PAGES
 import AdminDashboard from './pages/dashboard/admin/AdminDashboard';
 import ManageUsers from './pages/dashboard/admin/ManageUsers';
+import AdminManageBookings from "./pages/dashboard/admin/ManageBookings.jsx";
 import ManageListings from './pages/dashboard/admin/ManageListings';
 import Reports from './pages/dashboard/admin/Reports';
 
@@ -70,7 +69,6 @@ import TransportList from './pages/dashboard/admin/TransportList';
 
 // CUSTOMER DASHBOARD PAGES
 import CustomerDashboard from './pages/dashboard/customer/CustomerDashboard';
-import Messages from './pages/dashboard/customer/Messages';
 import ProfileSettings from './pages/dashboard/customer/ProfileSettings';
 import CustomerHotelBookings from './pages/dashboard/customer/CustomerHotelBookings';
 import CustomerTourBookings from './pages/dashboard/customer/CustomerTourBooking';
@@ -114,8 +112,6 @@ function App() {
           <Route path="/transport/:id" element={<TransportDetailPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/chatbot" element={<ChatbotPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
 
           {/* Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -131,6 +127,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardLayout role="admin" />}>
             <Route path="admin" element={<AdminDashboard />} />
             <Route path="admin/users" element={<ManageUsers />} />
+            <Route path="admin/bookings" element={<AdminManageBookings />} />
             <Route path="admin/listings" element={<ManageListings />} />
             <Route path="admin/reports" element={<Reports />} />
             
@@ -155,7 +152,6 @@ function App() {
 
             <Route path="customer/hotels" element={<CustomerHotelBookings />} />
             <Route path="customer/tours" element={<CustomerTourBookings />} />
-            <Route path="customer/messages" element={<Messages />} />
             <Route path="customer/profile" element={<ProfileSettings />} />
           </Route>
           {/* 404 Fallback */}

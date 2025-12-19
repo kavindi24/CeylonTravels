@@ -35,7 +35,7 @@ exports.chatWithDeepSeek = async (req, res) => {
   } catch (error) {
     console.error("Server Error:", error.message);
     res.status(500).json({
-      reply: "AI service unavailable"
+      reply: "AI service  is currently unavailable. Please Login or Register."
     });
   }
 };

@@ -1,6 +1,8 @@
 // controllers/adminController.js
 const Admin = require('../models/Admin');
 const User = require('../models/User');
+const HotelBooking = require('../models/HotelBooking');
+const Hotel = require('../models/Hotel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -33,5 +35,33 @@ exports.getAllUsers = async (req, res) => {
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch users', error: err.message });
+  }
+};
+
+exports.getAllHotelBookings = async (req, res) => {
+  try {
+    const bookings = await HotelBooking.findAll({
+      include: [
+        { model: User, attributes: ['id', 'name', 'email'] },
+        { model: Hotel, attributes: ['id', 'name'] }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch bookings', error: err.message });
+  }
+};
+
+exports.updateHotelBookingStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const booking = await HotelBooking.findByPk(req.params.id);
+    if (!booking) return res.status(404).json({ message: 'Booking not found' });
+    booking.status = status;
+    await booking.save();
+    res.json({ message: 'Booking status updated', booking });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update booking status', error: err.message });
   }
 };

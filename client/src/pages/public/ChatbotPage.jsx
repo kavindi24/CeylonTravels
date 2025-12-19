@@ -87,9 +87,15 @@ function ChatbotPage() {
   };
 
   return (
-    <div className="container-fluid min-vh-100 py-4" style={{ 
+    <div className="container-fluid min-vh-100 py-4" 
+    style={{ 
       backgroundColor: "#5f85ec75"
     }}>
+      <hr></hr>
+                <hr></hr>
+          <hr></hr>
+          <hr></hr>
+
       <div className="row justify-content-center">
         <div className="col-lg-8 col-md-10">
           <div className="card shadow-lg border-0 rounded-4 overflow-hidden" style={{

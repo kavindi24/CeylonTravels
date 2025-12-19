@@ -55,6 +55,7 @@ app.use("/api/hotel-booking", require("./routes/hotelBookingRoutes"));
 app.use("/api/chatbot", require("./routes/chatbotRoutes"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
 app.use("/api/tour-packages", require("./routes/tourPackageBookingRoutes"));
+app.use("/api/admin/hotel-bookings", require("./routes/adminBookingRoutes"));
 
 // Sync DB
 sequelize.sync({ alter: true })

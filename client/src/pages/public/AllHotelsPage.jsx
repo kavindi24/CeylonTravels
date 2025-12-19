@@ -232,7 +232,7 @@ function AllHotelsPage() {
 {/* ⭐ Most Rated Hotels Section */}
 <div className="container my-5">
   <h2 className="fw-bold mb-4 text-center">
-    ⭐ Most Rated Hotels
+     Most Popular Hotels
   </h2>
 
   <div className="row g-4">

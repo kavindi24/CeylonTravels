@@ -156,7 +156,7 @@ useEffect(() => {
             <h1 className="fw-bold display-5 mb-2">My Tour Bookings</h1>
             <p className="text-muted">Manage and track all your tour reservations</p>
           </div>
-          <Link to="/tour-packages" className="btn btn-outline-primary">
+          <Link to="/listings/tours" className="btn btn-outline-primary">
             <FaArrowLeft className="me-2" />
             Book New Tour
           </Link>
@@ -213,7 +213,7 @@ useEffect(() => {
           <div className="text-center py-5">
             <h4>No bookings found</h4>
             <p className="text-muted">You haven't made any tour bookings yet.</p>
-            <Link to="/tour-packages" className="btn btn-primary">Explore Tours</Link>
+            <Link to="/listings/tours" className="btn btn-primary">Explore Tours</Link>
           </div>
         ) : (
           <div className="row g-4">

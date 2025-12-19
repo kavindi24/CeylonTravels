@@ -130,7 +130,13 @@ function SearchResultsPage() {
   };
 
   return (
+    
     <div className="search-results-page">
+                <hr></hr>
+          <hr></hr>
+          <hr></hr>
+          <hr></hr>
+
       <div className="container mt-4">
         {/* Search Header */}
         <div className="search-header bg-light rounded-3 p-4 mb-4">
